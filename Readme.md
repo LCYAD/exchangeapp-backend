@@ -21,10 +21,19 @@ The problem is to create a service that gives out the latest or historical forei
 The design should be as follows:
 <img src="./openexchange_backend.png">
 
-* The API service lambda is responsible for grabing the exchange information, either from DB or from the API service and return it to the user.
+The Lambda API service will perform the following function:
+1. Query the DB to see if the data already exist or not. 
+	* For historical, if found, then return the corresponding id back to the user.  
+	* For latest, if the time in the DB that was last crawled was less than one minute, then return the id of the result.
+	* If the information is not found or if latest's last crawled time is over one min, then a new task to crawl the information is being sent to the SQS for processing and new entry with unique id is being added to the DB with the process as "pending".  This new unique id is then being returned to the user.
+2. Query the DB using the unique ID.  The DB will be searched and if the label is still "pending", there will be a retry with each retry having one more second of sleep time than last try.  Once the retry exceed 5, a timeout Error will be thrown out.
 
-* Another part of this solution is to have an Lambda function spawn task using CloudWatch Event to get the historical price on the previous dates and persist the data in the DB.  For the initial crawl, an API gateway will be setup to spawn one-off multiple crawling task (data should go back to around 1/1/2017) and then persist the data in DynamoDB.
+<font color="red">_The reason for this setup is such that the request will first check the DB (caching) before determining if there is a need to perform crawling or not (especially for historical crawls).  This will reduce the number of calls to the third party service, especially if there are a lot of request for latest price.  In addition, putting the task in the SQS will act as a buffer for the crawler lambda function and making the request an asynchronous call which is useful to scale the service in the case if a lot of request that needs to crawl the third party API occurs._</font>
 
-The SQS acts as a temporary buffer which also triggers the Lambda crawler function.
+The Lambda API service will be triggered when there is an job (with the unique id) in the SQS and will crawl the information from the third party API and store that information inside the DB.
 
-The DLQ should also be used in the case the crawler function receives error response from the third part API service.
+# Test Lambda Function
+Inside each folder, run the following code (change the input_test.json for different test case):
+```
+SLS_DEBUG=* serverless invoke local -f query --path test/input_test.json
+```

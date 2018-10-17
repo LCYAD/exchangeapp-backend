@@ -1,13 +1,8 @@
-import { APIGatewayEvent, Callback, Context, Handler } from 'aws-lambda';
+import { APIGatewayEvent, Context, Handler } from 'aws-lambda';
+import * as uuid from 'uuid/v4';
+import { response } from './utils/response';
 
-export const hello: Handler = (event: APIGatewayEvent, context: Context, cb: Callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
-
-  cb(null, response);
+export const query: Handler = async (event: APIGatewayEvent, context: Context) => {
+  const job_id: string = uuid();
+  return response(200, job_id, event, context);
 }
