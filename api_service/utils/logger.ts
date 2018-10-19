@@ -2,7 +2,7 @@ import { APIGatewayEvent, Context } from 'aws-lambda';
 import { Log } from '../interface';
 import { GetMessage } from './status';
 
-export function logger (statusCode: number, input: APIGatewayEvent, context: Context) { 
+export function Logger (statusCode: number, input: APIGatewayEvent, context: Context) { 
 	const logger_msg: Log = {
 		statusCode: statusCode,
 		message: GetMessage(statusCode),

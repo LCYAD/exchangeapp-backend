@@ -1,10 +1,10 @@
 import { APIGatewayEvent, Context } from "aws-lambda";
 import { Response } from '../interface';
 import { GetMessage } from './status';
-import { logger } from "./logger";
+import { Logger } from "./logger";
 
-export function response(statusCode: number, job_id: string, input: APIGatewayEvent, context: Context) {
-	logger(statusCode, input, context);
+export function SendResponse(statusCode: number, job_id: string, input: APIGatewayEvent, context: Context) {
+	Logger(statusCode, input, context);
 	const response_msg: Response = {
 		statusCode: statusCode,
 		body: JSON.stringify({

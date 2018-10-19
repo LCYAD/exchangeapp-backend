@@ -5,11 +5,15 @@ service:
 plugins:
   - serverless-webpack
 
+custom:
+  custom:
+  myStage: ${opt:stage, self:provider.stage}
+
 provider:
   name: aws
   runtime: nodejs8.10
   stage: dev
-  region: ap-southeast-1
+  region: ${file(./config/config.js):config.AWS_REGION} 
 
 functions:
   query:
