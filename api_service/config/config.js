@@ -8,6 +8,7 @@ require('dotenv').config({
 
 module.exports.config = () => {
 	return Object.freeze({
-		AWS_REGION: process.env.AWS_REGION
+		AWS_REGION: process.env.AWS_REGION,
+		AWS_SQS: process.env.AWS_SQS
 	});
 } 
