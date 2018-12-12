@@ -1,10 +1,11 @@
 import { APIGatewayEvent, Context, Handler } from 'aws-lambda';
 import * as uuid from 'uuid/v4';
-import { SendResponse } from './utils/response';
+import { SendResponse } from './utils/implementations/response';
 import * as AWS from 'aws-sdk';
 import { config } from './config/config';
 import { AWSError } from 'aws-sdk';
-import { pushTask } from './utils/sqs_handler';
+import { pushTask } from './utils/implementations/sqs';
+import * as SharedManager from './utils';
 
 AWS.config.update({ region: config().AWS_REGION });
 const sqs = new AWS.SQS({ apiVersion: 'latest', endpoint: 'https://sqs.ap-southeast-1.amazonaws.com/796672003184/exchangeapp-backend-queue'});

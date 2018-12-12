@@ -7,6 +7,6 @@ const message_list: object = {
 	801: 'Crawl No Result',
 }
 
-export function GetMessage(status_code: number) {
+export function getMessage(status_code: number) {
 	return message_list[status_code] ? message_list[status_code] : 'Unknown Status Code';;
 }

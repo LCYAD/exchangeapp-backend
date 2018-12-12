@@ -1,5 +1,5 @@
 import * as AWS from 'aws-sdk';
-import { config } from '../config/config';
+import { config } from '../../config/config';
 
 const settings = config();
 
@@ -12,7 +12,7 @@ export default class SQSHandler {
 		return new Promise((resolve, reject) => {
 			sqs.receiveMessage(params, (err, data) => {
 				if (err) {
-					reject(err); // an error occurred
+					reject(err); // throw error back to handler
 				} else if (data.Messages) {
 				  console.log(data.Messages[0].MessageAttributes);
 				  const deleteParams = {
