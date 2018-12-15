@@ -1,24 +1,13 @@
 import { APIGatewayEvent, Context } from 'aws-lambda';
-import { Log } from '../../interface';
-import { getMessage } from '../../enum/http_status';
 
 export default class Logger {
-	static log(statusCode: number, input: APIGatewayEvent, context: Context) {
-		const log_msg: Log = {
-			statusCode,
-			message: getMessage(statusCode),
-			input,
-			context,
-		}
+	static log(statusCode: number, msg: string, content: string) {
+		const log_msg: string =`INFO - code: ${statusCode}, message: ${msg}, content: ${content}`;
 		console.log(JSON.stringify(log_msg));	
 	}
 
 	static error(statusCode: number, msg: string, error: any) {
-		const error_msg: any = {
-			statusCode,
-			msg,
-			error
-		}
-		console.error(JSON.stringify(error_msg));
+		const error_msg: string = `ERROR! - code: ${statusCode}, message: ${msg}, error: ${error}`;
+		console.log(error_msg);
 	}
 }

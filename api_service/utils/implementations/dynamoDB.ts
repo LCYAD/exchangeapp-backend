@@ -3,6 +3,8 @@ import { config } from '../../config/config';
 
 const settings = config();
 
+AWS.config.update({ region: settings.AWS_REGION });
+
 const dynamodb = new AWS.DynamoDB();
 
 export default class DynamoDBHandler {
